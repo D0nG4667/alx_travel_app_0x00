@@ -47,7 +47,6 @@ services:
       - .env
     volumes:
       - ./alx_travel_app:/app/alx_travel_app
-      - ./listings:/app/listings
       - ./manage.py:/app/manage.py
       - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/mediafiles

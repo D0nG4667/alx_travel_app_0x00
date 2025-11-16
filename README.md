@@ -202,3 +202,4 @@ This command creates realistic data for development and testing, including rando
 - Integrate frontend SPA (React or Next.js) with REST API.
 - Add background tasks for notifications, emails, and reporting.
 - Enable image uploads and media storage for listings.
+- Implement caching strategies for performance optimization.
