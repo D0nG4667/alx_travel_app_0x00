@@ -12,6 +12,7 @@ dependencies = [
     "django-mysql>=4.19.0",
     "djangorestframework>=3.16.1",
     "drf-spectacular>=0.29.0",
+    "faker>=38.0.0",
     "gunicorn>=23.0.0",
     "mysqlclient>=2.2.7",
     "rabbitmq>=0.2.0",
