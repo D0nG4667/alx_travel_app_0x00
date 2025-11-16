@@ -11,7 +11,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
-from listings.models import Listing, Booking, Review
+from alx_travel_app.listings.models import Listing, Booking, Review
 from faker import Faker
 
 User = get_user_model()
@@ -80,12 +80,14 @@ class Command(BaseCommand):
         for j in range(count):
             start = date.today() + timedelta(days=offset + j * 3)
             end = start + timedelta(days=random.randint(2, 5))
+            num_days = (end - start).days
+            total_price = listing.price_per_night * Decimal(num_days)
             Booking.objects.create(
                 listing=listing,
                 guest=guest,
                 start_date=start,
                 end_date=end,
-                total_price=listing.price_per_night * Decimal(end - start).days,
+                total_price=total_price,
                 status=Booking.STATUS_CONFIRMED,
             )
             self.stdout.write(f'📅 Booking added for {listing.title} ({start} → {end})')

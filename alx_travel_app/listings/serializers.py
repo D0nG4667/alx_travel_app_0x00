@@ -4,6 +4,7 @@
 from rest_framework import serializers
 from django.db.models import Avg
 from .models import Listing, Booking, Review
+from drf_spectacular.utils import extend_schema_field
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -96,6 +97,7 @@ class ListingSerializer(serializers.ModelSerializer):
             'reviews',
         ]
 
-    def get_average_rating(self, obj):
+    @extend_schema_field(float)
+    def get_average_rating(self, obj) -> float:
         """Compute the average rating from all reviews for this listing."""
         return obj.reviews.aggregate(avg=Avg('rating')).get('avg') or 0.0

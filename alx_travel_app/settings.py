@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
     'django_mysql',
     # Local apps
-    'listings.apps.ListingsConfig',
+    'alx_travel_app.listings.apps.ListingsConfig',
 ]
 
 MIDDLEWARE = [
