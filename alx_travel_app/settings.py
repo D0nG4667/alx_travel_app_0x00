@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from ctypes import cast
 import os
 import environ
 from pathlib import Path
@@ -52,7 +53,8 @@ INSTALLED_APPS = [
     # Third-party
     'rest_framework',
     'corsheaders',
-    'drf_yasg',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     'django_mysql',
     # Local apps
     'listings.apps.ListingsConfig',
@@ -152,26 +154,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REST Framework settings (customize as needed)
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
 }
+
+# Auth Model
+# AUTH_USER_MODEL = 'users.User'
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=True)
 # or whitelist
 # CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
-
-# drf-yasg (Swagger) settings
-SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': True,
-    'SECURITY_DEFINITIONS': {'basic': {'type': 'basic'}},
-}
 
 # Celery config (example)
 CELERY_BROKER_URL = env(
@@ -185,4 +186,19 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {'console': {'class': 'logging.StreamHandler'}},
     'root': {'handlers': ['console'], 'level': 'INFO'},
+}
+
+# Swagger
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Listing API',
+    'DESCRIPTION': 'API for managing ALX Listing.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SECURITY': [
+        {
+            'type': 'http',
+            'scheme': 'bearer',
+            'bearerFormat': 'Token',
+        }
+    ],
 }

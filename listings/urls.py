@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 from .views import ListingViewSet
-from django.urls import include, path
+from django.urls import include
 
 # Register view sets
 router = routers.DefaultRouter()

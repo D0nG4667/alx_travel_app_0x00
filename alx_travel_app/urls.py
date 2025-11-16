@@ -16,37 +16,29 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include, re_path
-from django.conf import settings
-from rest_framework import permissions
-
-# drf-yasg
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title='ALX Travel App API',
-        default_version='v1',
-        description='API documentation for ALX Travel App',
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
+from django.contrib.auth import views as auth_views
+from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+    SpectacularRedocView,
 )
+from rest_framework.authtoken.views import obtain_auth_token
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('listings.urls')),  # listings app urls here
+    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('api/', include('listings.urls')),
+    path('api-auth/', include('rest_framework.urls')),  # ✅ browsable API login/logout
+    path('api/token/', obtain_auth_token),  # ✅ token-based authentication
     # swagger / redoc
-    re_path(
-        r'^swagger(?P<format>\.json|\.yaml)$',
-        schema_view.without_ui(cache_timeout=0),
-        name='schema-json',
-    ),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path(
-        'swagger/',
-        schema_view.with_ui('swagger', cache_timeout=0),
-        name='schema-swagger-ui',
+        'api/docs/',
+        SpectacularSwaggerView.as_view(url_name='schema'),
+        name='swagger-ui',
     ),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

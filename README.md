@@ -14,6 +14,7 @@ A modular, scalable Django-based travel listing platform with REST APIs, Swagger
 - [Database Setup](#database-setup)
 - [Running the Project](#running-the-project)
 - [API Documentation](#api-documentation)
+- [Data Seeding](#data-seeding)
 - [Docker Setup](#docker-setup)
 - [Future Enhancements](#future-enhancements)
 - [License](#license)
@@ -25,7 +26,7 @@ A modular, scalable Django-based travel listing platform with REST APIs, Swagger
 `alx_travel_app` is a travel listing platform designed with a modular Django backend. It leverages:
 
 - **Django REST Framework (DRF)** for building RESTful APIs.
-- **Swagger / drf-yasg** for automatic API documentation.
+- **drf-spectacular** for OpenAPI schema generation and Swagger documentation.
 - **MySQL** as the primary relational database.
 - **Celery and RabbitMQ** for task queuing and background processing.
 - **Docker** for containerized deployment.
@@ -36,10 +37,11 @@ This setup ensures scalability, maintainability, and readiness for production.
 
 ## Features
 
-- User-friendly REST APIs for listings, bookings, and user management.
+- RESTful APIs for listings, bookings, and reviews.
+- Nested serializers with computed fields (e.g., average rating).
+- Management command for realistic database seeding.
 - Environment-driven configuration using `.env` and `django-environ`.
-- Cross-Origin Resource Sharing (CORS) support for frontend integration.
-- Swagger UI (`/swagger/`) and ReDoc (`/redoc/`) documentation.
+- Swagger UI (`/docs/`) and ReDoc (`/redoc/`) documentation.
 - Containerized services for MySQL and RabbitMQ using Docker Compose.
 
 ---
@@ -59,9 +61,8 @@ This setup ensures scalability, maintainability, and readiness for production.
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/alx_travel_app.git
-   cd alx_travel_app
-
+   git clone https://github.com/DonG4667/alx_travel_app_0x00.git
+   cd alx_travel_app_0x00
    ```
 
 2. **Create a virtual environment:**
@@ -74,16 +75,14 @@ This setup ensures scalability, maintainability, and readiness for production.
 
 3. **Install dependencies:**
 
-   **Recommended**
-
    ```bash
-   uv sync
+   uv sync  # Recommended
    ```
 
-   **Alternative**
+   Or:
 
    ```bash
-   pip install -r requirement.txt
+   pip install -r requirements.txt
    ```
 
 ---
@@ -139,7 +138,7 @@ This setup ensures scalability, maintainability, and readiness for production.
 
 2. Access the app at:
 
-   ```link
+   ```web
    http://127.0.0.1:8000/
    ```
 
@@ -149,10 +148,26 @@ This setup ensures scalability, maintainability, and readiness for production.
 
 Swagger and ReDoc endpoints:
 
-- Swagger UI: [http://127.0.0.1:8000/swagger/](http://127.0.0.1:8000/swagger/)
+- Swagger UI: [http://127.0.0.1:8000/docs/](http://127.0.0.1:8000/docs/)
 - ReDoc: [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
 
-These endpoints automatically document all API routes.
+These endpoints automatically document all API routes using `drf-spectacular`.
+
+---
+
+## Data Seeding
+
+To populate the database with sample listings, bookings, and reviews:
+
+```bash
+python manage.py seed --count 3 --bookings 2 --reviews 2
+```
+
+- `--count`: Number of listings to create
+- `--bookings`: Bookings per listing
+- `--reviews`: Reviews per listing
+
+This command creates realistic data for development and testing, including randomized amenities and review content.
 
 ---
 
@@ -182,7 +197,8 @@ These endpoints automatically document all API routes.
 
 ## Future Enhancements
 
-- Implement user authentication and permissions.
+- Implement user authentication and role-based permissions.
 - Add advanced search and filtering for listings.
-- Integrate frontend SPA (React) with REST API.
+- Integrate frontend SPA (React or Next.js) with REST API.
 - Add background tasks for notifications, emails, and reporting.
+- Enable image uploads and media storage for listings.
